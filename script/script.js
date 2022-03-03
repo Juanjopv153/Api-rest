@@ -5,18 +5,13 @@ const search = document.getElementById('search')
 const main = document.getElementById('main')
 const frag = document.createDocumentFragment();
 
-
-const Pelis = async (url) => {
-    const res = await fetch(url)
+document.addEventListener('DOMContentLoaded', async () => {
+    const res = await fetch(API_URL)
     const data = await res.json()
-    console.log(data.results[1].url.name);
     showMovies(data.results)
-}
-
-Pelis(API_URL)
+})
 
 const showMovies = (movies) => {
-
     main.innerHTML = ""
     movies.forEach((elementos) => {
         const { name, image, species, status } = elementos;
@@ -43,13 +38,28 @@ const showMovies = (movies) => {
 
 }
 
-// form.addEventListener('submit', (e) => {
-//     e.preventDefault()
-//     const searchItem = search.value.toLocaleLowerCase()
-//     if (searchItem && searchItem !== "") {
-//         Pelis(SEARCH_URL + searchItem)
-//     }
-//     else {
-//         alert("Error")
-//     }
-// })
+form.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    const searchItem = search.value.toLocaleLowerCase()
+    res = await fetch(API_URL)
+    data = await res.json()
+    if (searchItem && searchItem !== "") {
+        newData = data.results.filter((element) => {
+            return element.name.toLocaleLowerCase().includes(searchItem)
+        })
+        console.log(newData);
+        if(newData.length == 0){
+            main.innerHTML = `
+            <h1 class="colorNo">No Hay Nada</h1>
+            `
+        }
+        else{
+            showMovies(newData)
+        }
+
+        form.reset();
+    }
+    else {
+        showMovies(data.results)
+    }
+})

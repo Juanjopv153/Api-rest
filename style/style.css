@@ -145,3 +145,6 @@ main {
     align-items: center;
     gap: 10px;
 }
+.colorNo{
+    color: white;
+}
